@@ -1,5 +1,7 @@
 import numpy as np
 from PIL import Image
+from typing import Tuple, List, Optional
+import cv2
 
 class Layer:
     def __init__(self, width: int, height: int, name: str):
@@ -42,12 +44,18 @@ class PixelGenerator:
         self.history = []
         self.redo_stack = []
         self.active_layer = None
+        self.section : Optional[Selection] = None
+        self.color_pallete : []
         self._save_initial_state()
 
     def _save_initial_state(self):
         """Save initial state to history"""
         self.history = [self.canvas.copy()]
         self.redo_stack = []
+
+    def create_selection(self, x1 : int, y1 : int, x2 : int, y2 : int): 
+        """Create a rectangular selection"""
+        self.selection = Selection(x1, y1, x2, y2)
 
     def add_layer(self, name: str):
         """Add a new layer and make it active"""
@@ -163,3 +171,47 @@ class PixelGenerator:
     def get_canvas(self):
         """Get current canvas state"""
         return self.canvas.copy()
+
+    def rotate_canvas(self, angle : float) -> None:
+        """Rotate entire canvas by angle degrees"""
+
+        center = (self.width // 2, self.height // 2)
+        rotation_matrix = cv2.getRotationMatrix2D(center, angle, 1.0)
+        self.canvas = cv2.warpAffine(self.canvas, rotation_matrix, (self.width, self.height))
+        self.save_state()
+
+    def scale_canvas(self, scale_factor : float) -> None:
+        """Scale canvas by factor"""
+        new_width = int(self.width  * scale_factor)
+        new_height = int(self.height * scale_factor)
+        self.canvas = cv2.resize(self.canvas, (new_width, new_height))
+        self.width, self.height = new_width, new_height
+        self.save_state()
+
+class Selection : 
+    def __init__(self, x1 : int, y1 : int, x2 : int, y2 : int):
+        self.x1 = min(x1, x2)
+        self.y1 = min(y1, y2)
+        self.x2 = max(x1, x2)
+        self.y2 = max(y1, y2)
+        self.content = None
+
+    @property
+    def width(self):
+        return self.x2 - self.x1
+
+    @property
+    def height(self):
+        return self.y2 - self.y1
+    
+
+
+
+
+
+
+
+
+
+
+
