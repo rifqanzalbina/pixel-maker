@@ -1,3 +1,16 @@
 {
-    "zencoder.enableRepoIndexing": true
+    "zencoder.enableRepoIndexing": true,
+    "workbench.activityBar.iconClickBehavior": "toggle",
+    "workbench.view.alwaysShowHeaderActions": true,
+    "workbench.view.showQuietly": {
+        "workbench.panel.output": false
+    },
+    "zenMode.centerLayout": true,
+    "zenMode.fullScreen": true,
+    "zenMode.hideActivityBar": true,
+    "zenMode.hideLineNumbers": true,
+    "zenMode.hideStatusBar": true,
+    "zenMode.restore": true,
+    "window.autoDetectColorScheme": false,
+    "window.commandCenter": true
 }

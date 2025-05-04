@@ -11,6 +11,28 @@ class TestPixelGenerator(unittest.TestCase):
         self.height = 32
         self.pixel_gen = PixelGenerator(self.width, self.height)
 
+    def test_toggle_grid(self):
+        """Test toggling grid visibility"""
+        self.assertFalse(self.pixel_gen.show_grid)  # Default is False
+        self.pixel_gen.toggle_grid()
+        self.assertTrue(self.pixel_gen.show_grid)  # Should be True after toggle
+        self.pixel_gen.toggle_grid()
+        self.assertFalse(self.pixel_gen.show_grid)  # Should be False after another toggle
+
+    def test_get_canvas_with_grid(self):
+        """Test canvas with grid overlay"""
+        self.pixel_gen.toggle_grid()  # Enable grid
+        canvas_with_grid = self.pixel_gen.get_canvas_with_grid()
+        grid_color = (200, 200, 200)
+
+        # Check vertical grid lines
+        for x in range(0, self.width, 1):
+            np.testing.assert_array_equal(canvas_with_grid[:, x, :], np.full((self.height, 3), grid_color))
+
+        # Check horizontal grid lines
+        for y in range(0, self.height, 1):
+            np.testing.assert_array_equal(canvas_with_grid[y, :, :], np.full((self.width, 3), grid_color))
+
     def test_initialization(self):
         """Test if PixelGenerator initializes correctly"""
         self.assertEqual(self.pixel_gen.width, self.width)

@@ -19,6 +19,11 @@ class PixelPreview:
         self.update_preview()
         self.root.mainloop()    
         
+    def update_preview(self):
+        img = Image.fromarray(self.pixel_generator.get_canvas_with_grid())  # Use canvas with grid
+        photo = ImageTk.PhotoImage(img)
+        self.canvas.create_image(0, 0, image=photo, anchor="nw")
+        self.root.after(100, self.update_preview)
         
         
         

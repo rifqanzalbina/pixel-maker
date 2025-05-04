@@ -46,6 +46,10 @@ class PixelGenerator:
         self.active_layer = None
         self.section : Optional[Selection] = None
         self.color_pallete : []
+        self.show_grid = False
+        self.grid_color = (200, 200, 200)
+        self.section : Optional[Selection] = None
+        self.color_pallete : []
         self._save_initial_state()
 
     def _save_initial_state(self):
@@ -84,6 +88,20 @@ class PixelGenerator:
     def get_merged_frame(self):
         """Get current frame with all visible layers merged"""
         return self.merge_layers()
+
+    def toggle_grid(self):
+        """Toggle grid visibility"""
+        self.show_grid = not self.show_grid
+        
+    def get_canvas_with_grid(self):
+        """Get the canvas with grid overlay if grid is enabled"""
+        canvas_with_grid = self.canvas.copy()
+        if self.show_grid:
+            for x in range(0, self.width, 1):  # Draw vertical grid lines
+                canvas_with_grid[:, x] = self.grid_color
+            for y in range(0, self.height, 1):  # Draw horizontal grid lines
+                canvas_with_grid[y, :] = self.grid_color
+        return canvas_with_grid
 
     def save_state(self):
         """Save current state to history"""
